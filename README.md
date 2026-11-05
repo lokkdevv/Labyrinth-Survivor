@@ -1,6 +1,5 @@
 # Candy Distribution
 &emsp;Top Down 2D survival/horror game made in c.
-<img src="assets/banner.png" alt="Project banner" width="200">
 
 ## Description
 &emsp;Game made in C using raylib with CMake as the build tool.

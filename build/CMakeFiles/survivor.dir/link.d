@@ -3,6 +3,7 @@ survivor: \
   /usr/lib/gcc/x86_64-redhat-linux/16/../../../../lib64/crti.o \
   /usr/lib/gcc/x86_64-redhat-linux/16/crtbegin.o \
   CMakeFiles/survivor.dir/src/main.c.o \
+  CMakeFiles/survivor.dir/src/utils.c.o \
   /usr/lib64/libraylib.so \
   /usr/lib64/libraylib.so \
   /usr/lib/gcc/x86_64-redhat-linux/16/libgcc.a \
@@ -48,6 +49,8 @@ survivor: \
 /usr/lib/gcc/x86_64-redhat-linux/16/crtbegin.o:
 
 CMakeFiles/survivor.dir/src/main.c.o:
+
+CMakeFiles/survivor.dir/src/utils.c.o:
 
 /usr/lib64/libraylib.so:
 

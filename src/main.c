@@ -1,55 +1,53 @@
 #include <raylib.h>
+#include "utils.h"
 
-#define windowWidth 800
-#define windowHeight 600
-
-typedef struct{
-    int x;
-    int y;
-    int gripping;
-} hand;
-
-typedef struct{
-    int x;
-    int y;
-    int health;
-} body;
+#define TARGET_WIDTH 480
+#define TARGET_HEIGHT 270
 
 int main()
 {
-    InitWindow(windowWidth, windowHeight, "Candy Distribution");
-    SetWindowState(FLAG_WINDOW_RESIZABLE);
+    SetConfigFlags(FLAG_WINDOW_RESIZABLE | FLAG_VSYNC_HINT);
+    InitWindow(TARGET_WIDTH, TARGET_HEIGHT, "Labyrinth Survivor");
     SetTargetFPS(60);
 
-    hand hand = {};
-    body body = {};
-    Vector2 movement = {};
-    Rectangle bean = {0, 0, 50, 20};
+    RenderTexture2D target = LoadRenderTexture(TARGET_WIDTH, TARGET_HEIGHT);
+
+    float scale;
+    Rectangle srcRect;
+    Rectangle destRect;
+
+    Vector2 pos = {TARGET_WIDTH/2, TARGET_HEIGHT/2};
 
     while (!WindowShouldClose()) {
-        hand.x = GetMouseX();
-        hand.y = GetMouseY();
+        if (IsKeyDown(KEY_W))
+            pos.y--;
+        if (IsKeyDown(KEY_S))
+            pos.y++;
+        if (IsKeyDown(KEY_A))
+            pos.x--;
+        if (IsKeyDown(KEY_D))
+            pos.x++;
 
-        if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
-            hand.gripping = 1;
-        else
-            hand.gripping = 0;
+        
+        scale = minf((float)GetScreenWidth()/TARGET_WIDTH, (float)GetScreenHeight()/TARGET_HEIGHT);
+        srcRect = (Rectangle){0, 0, (float)TARGET_WIDTH, (float)-TARGET_HEIGHT};
+        destRect = (Rectangle){(float)(GetScreenWidth()-(TARGET_WIDTH*scale))*0.5,
+                            (float)(GetScreenHeight()-(TARGET_HEIGHT*scale))*0.5,
+                            (float)TARGET_WIDTH*scale,
+                            (float)TARGET_HEIGHT*scale
+                            };
 
-        if (hand.gripping == 1) {
-            movement.x = hand.x - bean.x;
-            movement.y = hand.y - bean.y;
-        }
-        else
-            movement = (Vector2){0,0};
+        BeginTextureMode(target);
+        ClearBackground(RAYWHITE);
+        DrawCircle(pos.x, pos.y, 10, BROWN);
+        EndTextureMode();
 
-        bean.x += movement.x;
-    bean.y += movement.y;
-
-    BeginDrawing();
-    ClearBackground(RAYWHITE);
-    DrawRectanglePro(bean, (Vector2){bean.height/2,bean.width/2}, 0, BLACK);
+        BeginDrawing();
+        ClearBackground(BLACK);
+        DrawTexturePro(target.texture, srcRect, destRect, (Vector2){0,0}, 0.0f, WHITE);
         EndDrawing();
     }
+    UnloadRenderTexture(target);
     CloseWindow();
     return 0;
 }

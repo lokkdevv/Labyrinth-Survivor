@@ -2,6 +2,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/survivor.dir/link.d"
   "CMakeFiles/survivor.dir/src/main.c.o"
   "CMakeFiles/survivor.dir/src/main.c.o.d"
+  "CMakeFiles/survivor.dir/src/utils.c.o"
+  "CMakeFiles/survivor.dir/src/utils.c.o.d"
   "survivor"
   "survivor.pdb"
 )

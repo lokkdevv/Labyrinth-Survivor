@@ -85,12 +85,12 @@ clean: CMakeFiles/survivor.dir/clean
 CMakeFiles/survivor.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/survivor.dir/build.make CMakeFiles/survivor.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/survivor.dir/build.make CMakeFiles/survivor.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/admin/Projects/Labyrinth-Survivor/build/CMakeFiles --progress-num=1,2 "Built target survivor"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/admin/Projects/Labyrinth-Survivor/build/CMakeFiles --progress-num=1,2,3 "Built target survivor"
 .PHONY : CMakeFiles/survivor.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/survivor.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/admin/Projects/Labyrinth-Survivor/build/CMakeFiles 2
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/admin/Projects/Labyrinth-Survivor/build/CMakeFiles 3
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/survivor.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/admin/Projects/Labyrinth-Survivor/build/CMakeFiles 0
 .PHONY : CMakeFiles/survivor.dir/rule
@@ -102,7 +102,7 @@ survivor: CMakeFiles/survivor.dir/rule
 # codegen rule for target.
 CMakeFiles/survivor.dir/codegen:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/survivor.dir/build.make CMakeFiles/survivor.dir/codegen
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/admin/Projects/Labyrinth-Survivor/build/CMakeFiles --progress-num=1,2 "Finished codegen for target survivor"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/admin/Projects/Labyrinth-Survivor/build/CMakeFiles --progress-num=1,2,3 "Finished codegen for target survivor"
 .PHONY : CMakeFiles/survivor.dir/codegen
 
 # clean rule for target.

@@ -9,6 +9,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/home/admin/Projects/Labyrinth-Survivor/src/main.c" "CMakeFiles/survivor.dir/src/main.c.o" "gcc" "CMakeFiles/survivor.dir/src/main.c.o.d"
+  "/home/admin/Projects/Labyrinth-Survivor/src/utils.c" "CMakeFiles/survivor.dir/src/utils.c.o" "gcc" "CMakeFiles/survivor.dir/src/utils.c.o.d"
   "" "survivor" "gcc" "CMakeFiles/survivor.dir/link.d"
   )
 

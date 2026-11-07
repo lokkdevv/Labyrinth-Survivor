@@ -1,0 +1,7 @@
+{
+	"InstallScripts" : 
+	[
+		"/home/admin/Projects/Labyrinth-Survivor/build/cmake_install.cmake"
+	],
+	"Parallel" : false
+}

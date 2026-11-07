@@ -1,6 +1,6 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.11)
 
-project(candy LANGUAGES C)
+project(survivor LANGUAGES C)
 
 option(FETCH_RAYLIB "download and compile raylib for use in this project" OFF)
 

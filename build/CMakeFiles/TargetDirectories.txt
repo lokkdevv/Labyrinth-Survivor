@@ -1,0 +1,3 @@
+/home/admin/Projects/Labyrinth-Survivor/build/CMakeFiles/survivor.dir
+/home/admin/Projects/Labyrinth-Survivor/build/CMakeFiles/edit_cache.dir
+/home/admin/Projects/Labyrinth-Survivor/build/CMakeFiles/rebuild_cache.dir

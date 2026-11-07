@@ -1,1 +1,0 @@
-/usr/bin/cc -Wl,--dependency-file=CMakeFiles/survivor.dir/link.d CMakeFiles/survivor.dir/src/main.c.o CMakeFiles/survivor.dir/src/utils.c.o -o survivor  /usr/lib64/libraylib.so -L/usr/lib64 -lraylib

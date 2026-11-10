@@ -1,43 +1,70 @@
 #include "player.h"
+#include <raylib.h>
 
-float physicsUpdateInterval = 1.0f / 60.0f;
-float physicsUpdateTimer = 0;
-double delta;
+static float physicsUpdateInterval;
+static float physicsUpdateTimer;
+static float delta;
 
-Vector2 velocity = {0, 0};
-Vector2 direction = {0, 0};
-Vector2 position = {TARGET_WIDTH/2, TARGET_HEIGHT/2};
+void setPlayerTexture(Player *player, Texture2D text) {
+    player->texture = text;
+}
 
-float acceleration = 35.0f;
-float friction = 40.0f;
-float max_speed = 230.0f;
+void initPlayer(Player *player, Vector2 startPos, float acc, float fric, float max_s) {
+    player->velocity = (Vector2){0, 0};
+    player->direction = (Vector2){0, 0};
+    player->position = startPos;
 
-physicsUpdateTimer += delta;
+    player->acceleration = acc;
+    player->friction = fric;
+    player->max_speed = max_s;
+}
 
-direction = getDirection(KEY_S, KEY_W, KEY_A, KEY_D);
-direction = normalize(direction);
-
-////// Physics Update //////
-if (physicsUpdateTimer >= physicsUpdateInterval) {
-    if (vectorLengthSqr(direction) > 0) {
-        velocity.x += direction.x * acceleration;
-        velocity.y += direction.y * acceleration;
-    } else {
-        if (velocity.x > 0) velocity.x = maxf(0, velocity.x - friction);
-        else if (velocity.x < 0) velocity.x = minf(0, velocity.x + friction);
-        if (velocity.y > 0) velocity.y = maxf(0, velocity.y - friction);
-        else if (velocity.y < 0) velocity.y = minf(0, velocity.y + friction);
-    }
-
-    if (vectorLengthSqr(velocity) >= (max_speed*max_speed))
-        velocity = vectorScale(direction, max_speed);
-
+void initPhysics(float phInterval) {
+    physicsUpdateInterval = phInterval;
     physicsUpdateTimer = 0;
 }
-////////////////////////////
 
-position.x += velocity.x * delta;
-position.y += velocity.y * delta;
+void updatePlayer(Player *player, float dlt) {
+    delta = dlt;
+    physicsUpdateTimer += delta;
+    player->direction = getDirection(KEY_S, KEY_W, KEY_A, KEY_D);
+    player->direction = normalize(player->direction);
+}
 
-DrawCircle(position.x, position.y, 30, BROWN);
-EndTextureMode();
+void updatePhysics(Player *player) {
+    if (physicsUpdateTimer >= physicsUpdateInterval) {
+        if (vectorLengthSqr(player->direction) > 0) {
+            player->velocity.x += player->direction.x * player->acceleration;
+            player->velocity.y += player->direction.y * player->acceleration;
+        } else {
+            if (player->velocity.x > 0) player->velocity.x = maxf(0, player->velocity.x - player->friction);
+            else if (player->velocity.x < 0) player->velocity.x = minf(0, player->velocity.x + player->friction);
+            if (player->velocity.y > 0) player->velocity.y = maxf(0, player->velocity.y - player->friction);
+            else if (player->velocity.y < 0) player->velocity.y = minf(0, player->velocity.y + player->friction);
+        }
+
+        if (vectorLengthSqr(player->velocity) >= (player->max_speed*player->max_speed))
+            player->velocity = vectorScale(player->direction, player->max_speed);
+
+        physicsUpdateTimer = 0;
+    }
+}
+
+void movePlayer(Player *player) {
+    player->position.x += player->velocity.x * delta;
+    player->position.y += player->velocity.y * delta;
+}
+
+void drawPlayer(const Player *player, DRAW_TYPE draw_type) {
+    switch (draw_type) {
+        case DRAW_CIRCLE:
+            DrawCircle(player->position.x, player->position.y, 30, BROWN);
+            break;
+        case DRAW_TEXTURE:
+            DrawTexture(player->texture, player->position.x, player->position.y, WHITE);
+            break;
+        default:
+            break;
+    }
+}
+

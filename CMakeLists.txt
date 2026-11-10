@@ -25,6 +25,6 @@ if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release CACHE STRING "Choose the build type" Force)
 endif()
 
-add_executable(${PROJECT_NAME} src/main.c src/utils.c src/vector.c)
+add_executable(${PROJECT_NAME} src/main.c src/utils.c src/vector.c src/player.c)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE raylib m)

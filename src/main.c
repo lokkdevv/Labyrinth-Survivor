@@ -9,10 +9,7 @@ int main()
 {
     SetConfigFlags(FLAG_WINDOW_RESIZABLE | FLAG_VSYNC_HINT);
     InitWindow(TARGET_WIDTH, TARGET_HEIGHT, "Labyrinth Survivor");
-    SetTargetFPS(60);
-
-    Image image = LoadImage("../resources/sprites/vector_sprites/generic_death_animation/death_0.png");
-    Texture player = LoadTextureFromImage(image);
+    SetTargetFPS(90);
 
     RenderTexture2D target = LoadRenderTexture(TARGET_WIDTH, TARGET_HEIGHT);
     SetTextureFilter(target.texture, TEXTURE_FILTER_BILINEAR);
@@ -27,12 +24,11 @@ int main()
 
     Vector2 velocity = {0, 0};
     Vector2 direction = {0, 0};
-    Vector2 pos = {TARGET_WIDTH/2, TARGET_HEIGHT/2};
+    Vector2 position = {TARGET_WIDTH/2, TARGET_HEIGHT/2};
 
-    float acceleration = 10.0f;
-    float friction = 20.0f;
-    float speed = 50.0f;
-    float max_speed = 100.0f;
+    float acceleration = 35.0f;
+    float friction = 40.0f;
+    float max_speed = 230.0f;
 
     while (!WindowShouldClose()) {
         delta = GetFrameTime();
@@ -53,12 +49,15 @@ int main()
                 else if (velocity.y < 0) velocity.y = minf(0, velocity.y + friction);
             }
 
+            if (vectorLengthSqr(velocity) >= (max_speed*max_speed))
+                velocity = vectorScale(direction, max_speed);
+
             physicsUpdateTimer = 0;
         }
         ////////////////////////////
 
-        pos.x += velocity.x * delta;
-        pos.y += velocity.y * delta;
+        position.x += velocity.x * delta;
+        position.y += velocity.y * delta;
 
         
         ////// BoilerPlate //////
@@ -73,8 +72,7 @@ int main()
 
         BeginTextureMode(target);
         ClearBackground(RAYWHITE);
-        DrawCircle(pos.x, pos.y, 30, BROWN);
-        //DrawTexture(player, pos.x, pos.y, WHITE);
+        DrawCircle(position.x, position.y, 30, BROWN);
         EndTextureMode();
 
         BeginDrawing();
@@ -83,8 +81,6 @@ int main()
         EndDrawing();
     }
     UnloadRenderTexture(target);
-    UnloadTexture(player);
-    UnloadImage(image);
     CloseWindow();
     return 0;
 }

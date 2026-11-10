@@ -1,5 +1,5 @@
 # Candy Distribution
-&emsp;2D top down pixel-art extraction game.
+&emsp;2D top down extraction game.
 
 ## Descriptionher
 &emsp;Game made in C using raylib with CMake as the build tool.

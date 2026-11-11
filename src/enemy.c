@@ -17,7 +17,8 @@ Enemy* initEnemy(Image image, float attack_spd, float move_spd, float damage, Ve
 }
 
 void deleteEnemy(Enemy *enemy) {
-    UnloadTexture(enemy->texture);
+    if (enemy->texture.id != 0)
+        UnloadTexture(enemy->texture);
     free(enemy);
 }
 

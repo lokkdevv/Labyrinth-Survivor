@@ -4,11 +4,11 @@ static float physicsUpdateInterval;
 static float physicsUpdateTimer;
 static float delta;
 
-static CollisionRec interactionBox;
 static Vector2 lastNonNegativeDir;
 
-void setPlayerTexture(Player *player, Texture2D text) {
-    player->texture = text;
+void setPlayerTexture(Player *player, Image image) {
+    Texture2D texture = LoadTextureFromImage(image);
+    player->texture = texture;
 }
 
 Player* initPlayer(Vector2 startPos, float acc, float fric, float max_s, float phInterval, float radius) {
@@ -27,14 +27,14 @@ Player* initPlayer(Vector2 startPos, float acc, float fric, float max_s, float p
     physicsUpdateTimer = 0;
 
     lastNonNegativeDir = (Vector2){0, 0};
-    interactionBox.rec.width = 100;
-    interactionBox.rec.height = 70;
+    player->interactionBox.rec.width = 100;
+    player->interactionBox.rec.height = 70;
 
     return player;
 }
 
 void deletePlayer(Player *player) {
-    if (!player->texture.id)
+    if (player->texture.id != 0)
         UnloadTexture(player->texture);
     free(player);
 }
@@ -68,8 +68,10 @@ void updateAndMovePlayer(Player *player) {
     if (vectorLengthSqr(player->direction)>0.0001f)
         lastNonNegativeDir = player->direction;
 
-    interactionBox.rec.x = player->collisionCircle.circle.x + lastNonNegativeDir.x * interactionBox.rec.width/2;
-    interactionBox.rec.y = player->collisionCircle.circle.y + lastNonNegativeDir.y * interactionBox.rec.height/2;
+    player->interactionBox.rec.x = player->collisionCircle.circle.x +
+        lastNonNegativeDir.x * player->interactionBox.rec.width/2;
+    player->interactionBox.rec.y = player->collisionCircle.circle.y +
+        lastNonNegativeDir.y * player->interactionBox.rec.height/2;
 }
 
 void drawPlayer(const Player *player, DRAW_TYPE draw_type) {
@@ -85,7 +87,8 @@ void drawPlayer(const Player *player, DRAW_TYPE draw_type) {
         default:
             break;
     }
-    DrawRectangle(interactionBox.rec.x-interactionBox.rec.width/2, interactionBox.rec.y-interactionBox.rec.height/2,
-            interactionBox.rec.width, interactionBox.rec.height, debugYellow);
+    DrawRectangle(player->interactionBox.rec.x-player->interactionBox.rec.width/2,
+            player->interactionBox.rec.y-player->interactionBox.rec.height/2,
+            player->interactionBox.rec.width, player->interactionBox.rec.height, debugYellow);
 }
 

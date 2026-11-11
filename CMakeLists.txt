@@ -27,6 +27,6 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 add_executable(${PROJECT_NAME} src/main.c src/utils.c src/vector.c
-                src/player.c src/collision.c src/enemy.c)
+                src/player.c src/collision.c src/enemy.c src/object.c)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE raylib m)

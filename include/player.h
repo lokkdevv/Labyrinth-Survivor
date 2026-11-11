@@ -14,6 +14,7 @@ typedef enum {
 
 typedef struct {
     CollisionCircle collisionCircle;
+    CollisionRec interactionBox;
     Texture2D texture;
     Vector2 velocity;
     Vector2 direction;
@@ -22,7 +23,7 @@ typedef struct {
     float max_speed;
 } Player;
 
-void setPlayerTexture(Player *player, Texture2D texture);
+void setPlayerTexture(Player *player, Image image);
 void SetPlayerCollisionShape(Player *player, CollisionCircle collision_circle);
 Player* initPlayer(Vector2 initialPosition, float acceleration, float friction, float max_speed,
         float physics_update_interval, float collision_radius);

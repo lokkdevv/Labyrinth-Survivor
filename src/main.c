@@ -1,8 +1,10 @@
 #include <raylib.h>
+#include <stdio.h>
 #include "../include/utils.h"
 #include "../include/collision.h"
 #include "../include/player.h"
 #include "../include/enemy.h"
+#include "../include/object.h"
 
 #define TARGET_WIDTH 1920
 #define TARGET_HEIGHT 1080
@@ -26,6 +28,9 @@ int main()
     Image image = LoadImage("resources/sprites/death_0.png");
     Enemy *enemy = initEnemy(image, 20, 200, 30, (Vector2){30, 30}, 30);
     ///////////////////
+    /// Object setup //
+    Object *object = initObject((Vector2){600, 300}, 20, image, "sword");
+    ///////////////////
 
     CollisionRec wall = {{400, 500, 300, 500}, 0}; // Collision wall //
 
@@ -44,8 +49,13 @@ int main()
         updateAndMovePlayer(player);
         Vector2 player_pos = {player->collisionCircle.circle.x, player->collisionCircle.circle.y};
         updateAndMoveEnemy(enemy, player_pos);
+        updateObject(object);
 
+        canInteract(player->interactionBox, object);
         BCcollide(wall, &player->collisionCircle);
+
+        if (object->interacted == 1)
+            printf("Interacted with object with id: %d\n", object->id);
 
         ////// BoilerPlate //////
         scale = minf((float)GetScreenWidth()/TARGET_WIDTH, (float)GetScreenHeight()/TARGET_HEIGHT);
@@ -62,6 +72,7 @@ int main()
         DrawRectangleRec(wall.rec, BLACK);
         drawPlayer(player, DRAW_CIRCLE);
         drawEnemy(enemy);
+        drawObject(object);
         EndTextureMode();
 
         BeginDrawing();
@@ -72,6 +83,7 @@ int main()
     UnloadRenderTexture(target);
     deleteEnemy(enemy);
     deletePlayer(player);
+    deleteObject(object);
     CloseWindow();
     return 0;
 }

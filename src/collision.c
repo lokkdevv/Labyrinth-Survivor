@@ -1,5 +1,14 @@
 #include "../include/collision.h"
 
+int canInteract(CollisionRec interactionBox, CollisionCircle object) {
+    Vector2 center = {object.circle.x, object.circle.y};
+    float radius = object.circle.radius;
+    if (CheckCollisionCircleRec(center, radius, interactionBox.rec) && IsKeyPressed(KEY_E))
+        return 1;
+    else
+        return 0;
+}
+
 void BBcollide(CollisionRec *rec1, CollisionRec *rec2) {
     if (!CheckCollisionRecs(rec1->rec, rec2->rec))
         return;
@@ -39,14 +48,11 @@ void BCcollide(CollisionRec rect, CollisionCircle *circle) {
         circle->circle.x,
         circle->circle.y
     };
-
     float radius = circle->circle.radius;
 
-    // Check if a collision exists
     if (!CheckCollisionCircleRec(center, radius, rect.rec))
         return;
 
-    // Find the closest point on the rectangle to the circle
     float closestX = clamp(
         center.x,
         rect.rec.x,
@@ -59,13 +65,11 @@ void BCcollide(CollisionRec rect, CollisionCircle *circle) {
         rect.rec.y + rect.rec.height
     );
 
-    // Calculate direction from rectangle to circle
     float dx = center.x - closestX;
     float dy = center.y - closestY;
 
     float distance = sqrtf(dx * dx + dy * dy);
 
-    // Handle circle center inside rectangle
     if (distance == 0.0f) {
         float left   = center.x - rect.rec.x;
         float right  = rect.rec.x + rect.rec.width - center.x;
@@ -82,14 +86,11 @@ void BCcollide(CollisionRec rect, CollisionCircle *circle) {
             circle->circle.y -= radius + top;
         else
             circle->circle.y += radius + bottom;
-
         return;
     }
 
-    // Calculate how much the circle overlaps the rectangle
     float overlap = radius - distance;
 
-    // Normalize direction and push circle outside rectangle
     circle->circle.x += (dx / distance) * overlap;
     circle->circle.y += (dy / distance) * overlap;
 }

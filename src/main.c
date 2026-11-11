@@ -1,7 +1,8 @@
 #include <raylib.h>
 #include "../include/utils.h"
-#include "../include/player.h"
 #include "../include/collision.h"
+#include "../include/player.h"
+#include "../include/enemy.h"
 
 #define TARGET_WIDTH 1920
 #define TARGET_HEIGHT 1080
@@ -16,18 +17,19 @@ int main()
     InitWindow(TARGET_WIDTH, TARGET_HEIGHT, "Labyrinth Survivor");
     SetTargetFPS(90);
 
+    // Player setup //
     Vector2 startingPos = (Vector2){TARGET_WIDTH/2, TARGET_HEIGHT/2};
-    Player player;
     
-    initPlayer(&player, startingPos, ACCELERATION, FRICTION, MAX_SPEED, 1.0f/60.0f);
+    Player *player = initPlayer(startingPos, ACCELERATION, FRICTION, MAX_SPEED, 1.0f/60.0f, 30);
+    ///////////////////
+    /// Enemy setup ///
+    Image image = LoadImage("resources/sprites/death_0.png");
+    Enemy *enemy = initEnemy(image, 20, 200, 30, (Vector2){30, 30}, 30);
+    ///////////////////
 
-    CollisionRec player_collision_shape_2 = {(Rectangle){50, 50, 50, 50}, 1};
-    CollisionCircle player_collision_shape = {(Circle){50, 50, 30}, 1};
-    SetPlayerCollisionShape(&player, CIRCLE_COLLISION, 
-            player_collision_shape_2, player_collision_shape);
+    CollisionRec wall = {{400, 500, 300, 500}, 0}; // Collision wall //
 
-    CollisionRec wall = {{400, 500, 300, 500}, 0};
-
+    // BoilerPlate code //
     RenderTexture2D target = LoadRenderTexture(TARGET_WIDTH, TARGET_HEIGHT);
     SetTextureFilter(target.texture, TEXTURE_FILTER_BILINEAR);
 
@@ -36,14 +38,14 @@ int main()
     Rectangle destRect;
 
     double delta;
+    //////////////////////
 
     while (!WindowShouldClose()) {
-        delta = GetFrameTime();
-        updatePlayer(&player, delta);
-        movePlayer(&player);
+        updateAndMovePlayer(player);
+        Vector2 player_pos = {player->collisionCircle.circle.x, player->collisionCircle.circle.y};
+        updateAndMoveEnemy(enemy, player_pos);
 
-        //BBcollide(&player.collisionRec, &wall);
-        BCcollide(wall, &player.collisionCircle);
+        BCcollide(wall, &player->collisionCircle);
 
         ////// BoilerPlate //////
         scale = minf((float)GetScreenWidth()/TARGET_WIDTH, (float)GetScreenHeight()/TARGET_HEIGHT);
@@ -54,12 +56,12 @@ int main()
                             (float)TARGET_HEIGHT*scale
                             };
         /////////////////////////
-
+        
         BeginTextureMode(target);
         ClearBackground(RAYWHITE);
         DrawRectangleRec(wall.rec, BLACK);
-        //drawPlayer(&player, DRAW_RECT);
-        drawPlayer(&player, DRAW_CIRCLE);
+        drawPlayer(player, DRAW_CIRCLE);
+        drawEnemy(enemy);
         EndTextureMode();
 
         BeginDrawing();
@@ -68,6 +70,8 @@ int main()
         EndDrawing();
     }
     UnloadRenderTexture(target);
+    deleteEnemy(enemy);
+    deletePlayer(player);
     CloseWindow();
     return 0;
 }

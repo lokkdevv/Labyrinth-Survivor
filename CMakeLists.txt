@@ -12,11 +12,6 @@ if(FETCH_DEPENDENCIES)
         DOWNLOAD_EXTRACT_TIMESTAMP ON
     )
     FetchContent_MakeAvailable(raylib)
-    #FetchContent_Declare(box2d
-    #URL https://github.com/erincatto/box2d/archive/refs/tags/v3.0.0.tar.gz
-    #DOWNLOAD_EXTRACT_TIMESTAMP ON
-    #)
-    #FetchContent_MakeAvailable(box2d)
 else()
 find_package(raylib QUIET)
 if(NOT raylib_FOUND)
@@ -32,6 +27,6 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 add_executable(${PROJECT_NAME} src/main.c src/utils.c src/vector.c
-                src/player.c src/collision.c)
+                src/player.c src/collision.c src/enemy.c)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE raylib m)

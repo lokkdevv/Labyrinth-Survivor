@@ -4,29 +4,20 @@ static float physicsUpdateInterval;
 static float physicsUpdateTimer;
 static float delta;
 
+static CollisionRec interactionBox;
+static Vector2 lastNonNegativeDir;
+
 void setPlayerTexture(Player *player, Texture2D text) {
     player->texture = text;
 }
 
-void SetPlayerCollisionShape(Player *player, COLLISION_SHAPE collision_shape, 
-        CollisionRec collisionRec, CollisionCircle collisionCircle) {
-    switch (collision_shape) {
-        case RECTANGLE_COLLISION:
-            player->collisionRec = collisionRec;
-            break;
-        case CIRCLE_COLLISION:
-            player->collisionCircle = collisionCircle;
-            break;
-        default:
-            break;
-    }
-}
-
-void initPlayer(Player *player, Vector2 startPos, float acc, float fric, float max_s, float phInterval) {
+Player* initPlayer(Vector2 startPos, float acc, float fric, float max_s, float phInterval, float radius) {
+    Player *player = (Player*)malloc(sizeof(Player));
     player->velocity = (Vector2){0, 0};
     player->direction = (Vector2){0, 0};
-    player->collisionRec.rec.x = startPos.x;
-    player->collisionRec.rec.y = startPos.y;
+    player->collisionCircle.circle.x = startPos.x;
+    player->collisionCircle.circle.y = startPos.y;
+    player->collisionCircle.circle.radius = radius;
 
     player->acceleration = acc;
     player->friction = fric;
@@ -34,10 +25,22 @@ void initPlayer(Player *player, Vector2 startPos, float acc, float fric, float m
 
     physicsUpdateInterval = phInterval;
     physicsUpdateTimer = 0;
+
+    lastNonNegativeDir = (Vector2){0, 0};
+    interactionBox.rec.width = 100;
+    interactionBox.rec.height = 70;
+
+    return player;
 }
 
-void updatePlayer(Player *player, float dlt) {
-    delta = dlt;
+void deletePlayer(Player *player) {
+    if (!player->texture.id)
+        UnloadTexture(player->texture);
+    free(player);
+}
+
+void updateAndMovePlayer(Player *player) {
+    delta = GetFrameTime();
     physicsUpdateTimer += delta;
     player->direction = getDirection(KEY_S, KEY_W, KEY_A, KEY_D);
     player->direction = normalize(player->direction);
@@ -58,31 +61,31 @@ void updatePlayer(Player *player, float dlt) {
 
         physicsUpdateTimer = 0;
     }
-}
-
-void movePlayer(Player *player) {
-    player->collisionRec.rec.x += player->velocity.x * delta;
-    player->collisionRec.rec.y += player->velocity.y * delta;
 
     player->collisionCircle.circle.x += player->velocity.x * delta;
     player->collisionCircle.circle.y += player->velocity.y * delta;
+
+    if (vectorLengthSqr(player->direction)>0.0001f)
+        lastNonNegativeDir = player->direction;
+
+    interactionBox.rec.x = player->collisionCircle.circle.x + lastNonNegativeDir.x * interactionBox.rec.width/2;
+    interactionBox.rec.y = player->collisionCircle.circle.y + lastNonNegativeDir.y * interactionBox.rec.height/2;
 }
 
 void drawPlayer(const Player *player, DRAW_TYPE draw_type) {
     switch (draw_type) {
         case DRAW_CIRCLE:
             DrawCircle(player->collisionCircle.circle.x, player->collisionCircle.circle.y,
-                    player->collisionCircle.circle.radius, BROWN);
+                    player->collisionCircle.circle.radius, debugGreen);
             break;
         case DRAW_TEXTURE:
             DrawTexture(player->texture, player->collisionCircle.circle.x - (player->texture.width)/2,
                     player->collisionCircle.circle.y - (player->texture.height)/2, WHITE);
             break;
-        case DRAW_RECT:
-            DrawRectangle(player->collisionRec.rec.x, player->collisionRec.rec.y,
-                    player->collisionRec.rec.width, player->collisionRec.rec.height, BROWN);
         default:
             break;
     }
+    DrawRectangle(interactionBox.rec.x-interactionBox.rec.width/2, interactionBox.rec.y-interactionBox.rec.height/2,
+            interactionBox.rec.width, interactionBox.rec.height, debugYellow);
 }
 

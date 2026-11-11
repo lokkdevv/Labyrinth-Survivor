@@ -1,5 +1,4 @@
-#include "vector.h"
-#include <raylib.h>
+#include "../include/vector.h"
 
 inline float vectorLengthSqr(Vector2 vector) {
     return vector.x*vector.x+vector.y*vector.y;

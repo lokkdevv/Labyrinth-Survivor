@@ -1,5 +1,4 @@
-#include "player.h"
-#include <raylib.h>
+#include "../include/player.h"
 
 static float physicsUpdateInterval;
 static float physicsUpdateTimer;
@@ -9,17 +8,30 @@ void setPlayerTexture(Player *player, Texture2D text) {
     player->texture = text;
 }
 
-void initPlayer(Player *player, Vector2 startPos, float acc, float fric, float max_s) {
+void SetPlayerCollisionShape(Player *player, COLLISION_SHAPE collision_shape, 
+        CollisionRec collisionRec, CollisionCircle collisionCircle) {
+    switch (collision_shape) {
+        case RECTANGLE_COLLISION:
+            player->collisionRec = collisionRec;
+            break;
+        case CIRCLE_COLLISION:
+            player->collisionCircle = collisionCircle;
+            break;
+        default:
+            break;
+    }
+}
+
+void initPlayer(Player *player, Vector2 startPos, float acc, float fric, float max_s, float phInterval) {
     player->velocity = (Vector2){0, 0};
     player->direction = (Vector2){0, 0};
-    player->position = startPos;
+    player->collisionRec.rec.x = startPos.x;
+    player->collisionRec.rec.y = startPos.y;
 
     player->acceleration = acc;
     player->friction = fric;
     player->max_speed = max_s;
-}
 
-void initPhysics(float phInterval) {
     physicsUpdateInterval = phInterval;
     physicsUpdateTimer = 0;
 }
@@ -29,9 +41,7 @@ void updatePlayer(Player *player, float dlt) {
     physicsUpdateTimer += delta;
     player->direction = getDirection(KEY_S, KEY_W, KEY_A, KEY_D);
     player->direction = normalize(player->direction);
-}
 
-void updatePhysics(Player *player) {
     if (physicsUpdateTimer >= physicsUpdateInterval) {
         if (vectorLengthSqr(player->direction) > 0) {
             player->velocity.x += player->direction.x * player->acceleration;
@@ -51,18 +61,26 @@ void updatePhysics(Player *player) {
 }
 
 void movePlayer(Player *player) {
-    player->position.x += player->velocity.x * delta;
-    player->position.y += player->velocity.y * delta;
+    player->collisionRec.rec.x += player->velocity.x * delta;
+    player->collisionRec.rec.y += player->velocity.y * delta;
+
+    player->collisionCircle.circle.x += player->velocity.x * delta;
+    player->collisionCircle.circle.y += player->velocity.y * delta;
 }
 
 void drawPlayer(const Player *player, DRAW_TYPE draw_type) {
     switch (draw_type) {
         case DRAW_CIRCLE:
-            DrawCircle(player->position.x, player->position.y, 30, BROWN);
+            DrawCircle(player->collisionCircle.circle.x, player->collisionCircle.circle.y,
+                    player->collisionCircle.circle.radius, BROWN);
             break;
         case DRAW_TEXTURE:
-            DrawTexture(player->texture, player->position.x, player->position.y, WHITE);
+            DrawTexture(player->texture, player->collisionCircle.circle.x - (player->texture.width)/2,
+                    player->collisionCircle.circle.y - (player->texture.height)/2, WHITE);
             break;
+        case DRAW_RECT:
+            DrawRectangle(player->collisionRec.rec.x, player->collisionRec.rec.y,
+                    player->collisionRec.rec.width, player->collisionRec.rec.height, BROWN);
         default:
             break;
     }

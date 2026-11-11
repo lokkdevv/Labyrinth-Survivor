@@ -18,7 +18,7 @@ cmake --build build
 ```
 * If raylib is not installed in your system, run the following command to automaticallt download and compile raylib for the project:
 ```bash
-cmake -S . -B build -DFETCH_RAYLIB=ON
+cmake -S . -B build -DFETCH_DEPENDENCIES=ON
 cmake --build build
 ```
 

@@ -1,10 +1,10 @@
 # labyrinth Survivor
 &emsp;2D top down tower defense game.
 
-## Descriptionher
+## Description
 &emsp;Game made in C using raylib with CMake as the build tool.
 ### Idea
-You are inside a labyrinth and everyday other survivors try to raid your hideout and you must protect it against the waves of enemies to survive.
+You are in a space labyrinth and have to protect your lost ship and multiple waves of enemies trying to raid and loot it.
 
 ## Building and Running
 * You need cmake 3.11 or newer installed to build the project, run the following cammand to see what version you have installed if any:
@@ -26,6 +26,11 @@ cmake --build build
 ```bash
 ./build/survivor
 ```
+
+### Dependencies
+- Linux operating system (Never tested on windows or macos)
+- Raylib
+- X11 and Wayland (idk which one you need so you need both ig)
 
 ## License
 

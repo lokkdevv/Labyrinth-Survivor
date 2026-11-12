@@ -12,6 +12,8 @@
 #define FRICTION 7.0f
 #define MAX_SPEED 10000.0f
 
+#define LIGHTPURPLE (Color){112, 41, 99, 20}
+
 int main()
 {
     SetConfigFlags(FLAG_WINDOW_RESIZABLE | FLAG_VSYNC_HINT);
@@ -73,20 +75,33 @@ int main()
         updateUI();
         
         BeginTextureMode(target);
-        ClearBackground(RAYWHITE);
+        ClearBackground(BLACK);
         DrawTexture(background_text, 0, 0, WHITE);
+        // Path Drawing //
+        DrawRectangleRounded((Rectangle){1920-460, 1080/2-250, 700, 120}, 1, 2, LIGHTPURPLE);
+        DrawRectangleRounded((Rectangle){1920-460, 1080/2-250, 120, 680}, 1, 2, LIGHTPURPLE);
+        DrawRectangleRounded((Rectangle){1920-680-460+120, 1080/2+310, 680, 120}, 1, 2, LIGHTPURPLE);
+        DrawRectangleRounded((Rectangle){1920-680-460+120, 1080/2+310-700+120, 120, 700}, 1, 2, LIGHTPURPLE);
+        DrawRectangleRounded((Rectangle){340, 1080/2+310-700+120, 680, 120}, 1, 2, LIGHTPURPLE);
+        DrawRectangleRounded((Rectangle){340, 1080/2+310-700+120, 120, 480}, 1, 2, LIGHTPURPLE);
+        DrawRectangleRounded((Rectangle){-50, 680-50, 510, 120}, 1, 2, LIGHTPURPLE);
+        //////////////////
+
         drawPlayer(player);
         drawEnemy(enemy);
         drawObject(object);
         drawObject(point1);
+
         EndTextureMode();
 
+        // Not Important //
         BeginDrawing();
         ClearBackground(BLACK);
         BeginShaderMode(shader);
         DrawTexturePro(target.texture, srcRect, destRect, (Vector2){0,0}, 0.0f, WHITE);
         EndShaderMode();
         EndDrawing();
+        ///////////////////
     }
     UnloadRenderTexture(target);
     UnloadShader(shader);

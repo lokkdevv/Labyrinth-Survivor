@@ -1,10 +1,10 @@
-# Candy Distribution
-&emsp;2D top down extraction game.
+# labyrinth Survivor
+&emsp;2D top down tower defense game.
 
 ## Descriptionher
 &emsp;Game made in C using raylib with CMake as the build tool.
 ### Idea
-You have entered a labyrinth by accident and are unable to escape and you fing other survivors in the labyrinth which gives you a little more hope so you try your hardest every day to collect resources and survive the labyrinth.
+You are inside a labyrinth and everyday other survivors try to raid your hideout and you must protect it against the waves of enemies to survive.
 
 ## Building and Running
 * You need cmake 3.11 or newer installed to build the project, run the following cammand to see what version you have installed if any:
@@ -16,7 +16,7 @@ cmake --version
 cmake -S . -B build
 cmake --build build
 ```
-* If raylib is not installed in your system, run the following command to automaticallt download and compile raylib for the project:
+* If raylib is not installed in your system, run the following command to automatically download and compile raylib for the project:
 ```bash
 cmake -S . -B build -DFETCH_DEPENDENCIES=ON
 cmake --build build

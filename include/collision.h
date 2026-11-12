@@ -21,9 +21,7 @@ typedef struct {
 } CollisionCircle;
 
 typedef struct {
-    int id;
     int interacted;
-    char *name;
     CollisionCircle circle;
     Texture2D texture;
 } Object;

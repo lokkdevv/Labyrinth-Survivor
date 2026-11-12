@@ -3,7 +3,7 @@
 
 static float delta;
 
-Enemy* initEnemy(Image image, float attack_spd, float move_spd, float damage, Vector2 starting_pos, float radius) {
+Enemy* initEnemy(float attack_spd, float move_spd, float damage, Vector2 starting_pos, float radius) {
     Enemy* enemy = (Enemy*)malloc(sizeof(Enemy));
     enemy->circle.circle.radius = radius;
     enemy->damage = damage;
@@ -11,14 +11,10 @@ Enemy* initEnemy(Image image, float attack_spd, float move_spd, float damage, Ve
     enemy->move_speed = move_spd;
     enemy->circle.circle.x = starting_pos.x;
     enemy->circle.circle.y = starting_pos.y;
-    Texture2D texture = LoadTextureFromImage(image);
-    enemy->texture = texture;
     return enemy;
 }
 
 void deleteEnemy(Enemy *enemy) {
-    if (enemy->texture.id != 0)
-        UnloadTexture(enemy->texture);
     free(enemy);
 }
 
@@ -34,12 +30,6 @@ void updateAndMoveEnemy(Enemy *enemy, Vector2 target) {
 }
 
 void drawEnemy(Enemy *enemy) {
-    Vector2 origin = {0, 0};
-    Rectangle source = {0, 0,
-        enemy->texture.width, enemy->texture.height};
-    Rectangle dest = {enemy->circle.circle.x, enemy->circle.circle.y,
-        enemy->texture.width/4, enemy->texture.height/4};
-    //DrawTexturePro(enemy->texture, source, dest, origin, 0.0f, WHITE);
     DrawCircle(enemy->circle.circle.x, enemy->circle.circle.y, enemy->circle.circle.radius, debugRed);
 }
 

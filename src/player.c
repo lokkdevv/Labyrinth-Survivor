@@ -1,15 +1,12 @@
 #include "../include/player.h"
+#include <raylib.h>
+#include <stdio.h>
 
 static float physicsUpdateInterval;
 static float physicsUpdateTimer;
 static float delta;
 
 static Vector2 lastNonNegativeDir;
-
-void setPlayerTexture(Player *player, Image image) {
-    Texture2D texture = LoadTextureFromImage(image);
-    player->texture = texture;
-}
 
 Player* initPlayer(Vector2 startPos, float acc, float fric, float max_s, float phInterval, float radius) {
     Player *player = (Player*)malloc(sizeof(Player));
@@ -23,6 +20,8 @@ Player* initPlayer(Vector2 startPos, float acc, float fric, float max_s, float p
     player->friction = fric;
     player->max_speed = max_s;
 
+    player->money = 200;
+
     physicsUpdateInterval = phInterval;
     physicsUpdateTimer = 0;
 
@@ -34,8 +33,6 @@ Player* initPlayer(Vector2 startPos, float acc, float fric, float max_s, float p
 }
 
 void deletePlayer(Player *player) {
-    if (player->texture.id != 0)
-        UnloadTexture(player->texture);
     free(player);
 }
 
@@ -68,27 +65,22 @@ void updateAndMovePlayer(Player *player) {
     if (vectorLengthSqr(player->direction)>0.0001f)
         lastNonNegativeDir = player->direction;
 
-    player->interactionBox.rec.x = player->collisionCircle.circle.x +
+    player->interactionBox.rec.x = player->collisionCircle.circle.x - player->interactionBox.rec.width/2 +
         lastNonNegativeDir.x * player->interactionBox.rec.width/2;
-    player->interactionBox.rec.y = player->collisionCircle.circle.y +
+    player->interactionBox.rec.y = player->collisionCircle.circle.y - player->interactionBox.rec.height/2+
         lastNonNegativeDir.y * player->interactionBox.rec.height/2;
 }
 
-void drawPlayer(const Player *player, DRAW_TYPE draw_type) {
-    switch (draw_type) {
-        case DRAW_CIRCLE:
-            DrawCircle(player->collisionCircle.circle.x, player->collisionCircle.circle.y,
-                    player->collisionCircle.circle.radius, debugGreen);
-            break;
-        case DRAW_TEXTURE:
-            DrawTexture(player->texture, player->collisionCircle.circle.x - (player->texture.width)/2,
-                    player->collisionCircle.circle.y - (player->texture.height)/2, WHITE);
-            break;
-        default:
-            break;
-    }
-    DrawRectangle(player->interactionBox.rec.x-player->interactionBox.rec.width/2,
-            player->interactionBox.rec.y-player->interactionBox.rec.height/2,
+void drawPlayer(const Player *player) {
+    DrawCircle(player->collisionCircle.circle.x, player->collisionCircle.circle.y,
+            player->collisionCircle.circle.radius, debugGreen);
+    DrawRectangle(player->interactionBox.rec.x,
+            player->interactionBox.rec.y,
             player->interactionBox.rec.width, player->interactionBox.rec.height, debugYellow);
+
+    DrawText("Money:", 1920/2-85, 5, 30, YELLOW);
+    char money[40];
+    snprintf(money, sizeof(money), "%d", player->money);
+    DrawText(money, 1920/2-50, 30, 30, YELLOW);
 }
 

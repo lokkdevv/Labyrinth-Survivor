@@ -1,11 +1,12 @@
 #include "../include/collision.h"
 
 void canInteract(CollisionRec interactionBox, Object *object) {
-    CollisionCircle circle = object->circle;
-    Vector2 center = {circle.circle.x, circle.circle.y};
-    float radius = circle.circle.radius;
-    if (CheckCollisionCircleRec(center, radius, interactionBox.rec) && IsKeyPressed(KEY_E))
+    Vector2 center = {object->circle.circle.x, object->circle.circle.y};
+    float radius = object->circle.circle.radius;
+    if (CheckCollisionCircleRec(center, radius, interactionBox.rec))
         object->interacted = 1;
+    else
+        object->interacted = 0;
 }
 
 void BBcollide(CollisionRec *rec1, CollisionRec *rec2) {

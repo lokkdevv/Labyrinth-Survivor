@@ -8,7 +8,6 @@
 
 typedef struct {
     CollisionCircle circle;
-    Texture2D texture;
     float move_speed;
     float damage;
     float attack_speed;
@@ -16,7 +15,7 @@ typedef struct {
     Vector2 target_pos;
 } Enemy;
 
-Enemy* initEnemy(Image image, float attack_speed, float move_speed, 
+Enemy* initEnemy(float attack_speed, float move_speed, 
         float damage, Vector2 starting_position, float radius);
 void updateAndMoveEnemy(Enemy *enemy, Vector2 target_position);
 void deleteEnemy(Enemy *enemy);

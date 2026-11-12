@@ -1,5 +1,4 @@
 #include <raylib.h>
-#include <stdio.h>
 #include "../include/utils.h"
 #include "../include/collision.h"
 #include "../include/player.h"
@@ -11,7 +10,7 @@
 
 #define ACCELERATION 40.0f
 #define FRICTION 45.0f
-#define MAX_SPEED 450.0f
+#define MAX_SPEED 250.0f
 
 int main()
 {
@@ -19,17 +18,21 @@ int main()
     InitWindow(TARGET_WIDTH, TARGET_HEIGHT, "Labyrinth Survivor");
     SetTargetFPS(90);
 
+    Image background = LoadImage("resources/sprites/Space_Background1.png");
+    Texture background_text = LoadTextureFromImage(background);
+    UnloadImage(background);
+
     // Player setup //
     Vector2 startingPos = (Vector2){TARGET_WIDTH/2, TARGET_HEIGHT/2};
     
     Player *player = initPlayer(startingPos, ACCELERATION, FRICTION, MAX_SPEED, 1.0f/60.0f, 30);
     ///////////////////
     /// Enemy setup ///
-    Image image = LoadImage("resources/sprites/death_0.png");
-    Enemy *enemy = initEnemy(image, 20, 200, 30, (Vector2){30, 30}, 30);
+    Enemy *enemy = initEnemy(20, 200, 30, (Vector2){30, 30}, 30);
     ///////////////////
     /// Object setup //
-    Object *object = initObject((Vector2){600, 300}, 20, image, "sword");
+    Object *object = initObject((Vector2){600, 300}, 20);
+    Object *point1 = initObject((Vector2){1920-200, 500}, 20);
     ///////////////////
 
     CollisionRec wall = {{400, 500, 300, 500}, 0}; // Collision wall //
@@ -37,6 +40,8 @@ int main()
     // BoilerPlate code //
     RenderTexture2D target = LoadRenderTexture(TARGET_WIDTH, TARGET_HEIGHT);
     SetTextureFilter(target.texture, TEXTURE_FILTER_BILINEAR);
+    Shader shader = LoadShader(0, "resources/shaders/shader.fs");
+    //if (shader.id == 0)
 
     float scale;
     Rectangle srcRect;
@@ -49,13 +54,15 @@ int main()
         updateAndMovePlayer(player);
         Vector2 player_pos = {player->collisionCircle.circle.x, player->collisionCircle.circle.y};
         updateAndMoveEnemy(enemy, player_pos);
-        updateObject(object);
+
+        draw_ui = 0;
+        updateObject(object, player);
+        updateObject(point1, player);
+
 
         canInteract(player->interactionBox, object);
+        canInteract(player->interactionBox, point1);
         BCcollide(wall, &player->collisionCircle);
-
-        if (object->interacted == 1)
-            printf("Interacted with object with id: %d\n", object->id);
 
         ////// BoilerPlate //////
         scale = minf((float)GetScreenWidth()/TARGET_WIDTH, (float)GetScreenHeight()/TARGET_HEIGHT);
@@ -66,24 +73,32 @@ int main()
                             (float)TARGET_HEIGHT*scale
                             };
         /////////////////////////
+
+        updateUI();
         
         BeginTextureMode(target);
         ClearBackground(RAYWHITE);
+        DrawTexture(background_text, 0, 0, WHITE);
         DrawRectangleRec(wall.rec, BLACK);
-        drawPlayer(player, DRAW_CIRCLE);
+        drawPlayer(player);
         drawEnemy(enemy);
         drawObject(object);
+        drawObject(point1);
         EndTextureMode();
 
         BeginDrawing();
         ClearBackground(BLACK);
+        BeginShaderMode(shader);
         DrawTexturePro(target.texture, srcRect, destRect, (Vector2){0,0}, 0.0f, WHITE);
+        EndShaderMode();
         EndDrawing();
     }
     UnloadRenderTexture(target);
+    UnloadShader(shader);
     deleteEnemy(enemy);
     deletePlayer(player);
     deleteObject(object);
+    deleteObject(point1);
     CloseWindow();
     return 0;
 }

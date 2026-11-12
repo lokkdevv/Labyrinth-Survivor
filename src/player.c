@@ -1,12 +1,14 @@
 #include "../include/player.h"
-#include <raylib.h>
-#include <stdio.h>
+
+#define LAUNCH_FORCE 300
 
 static float physicsUpdateInterval;
 static float physicsUpdateTimer;
 static float delta;
 
 static Vector2 lastNonNegativeDir;
+
+static int launch_force = 0;
 
 Player* initPlayer(Vector2 startPos, float acc, float fric, float max_s, float phInterval, float radius) {
     Player *player = (Player*)malloc(sizeof(Player));
@@ -42,10 +44,28 @@ void updateAndMovePlayer(Player *player) {
     player->direction = getDirection(KEY_S, KEY_W, KEY_A, KEY_D);
     player->direction = normalize(player->direction);
 
+    if (player->collisionCircle.circle.x < 0) {
+        player->direction = (Vector2){1, 0};
+        launch_force = LAUNCH_FORCE;
+    }
+    if (player->collisionCircle.circle.x > 1920) {
+        player->direction = (Vector2){-1, 0};
+        launch_force = LAUNCH_FORCE;
+    }
+    if (player->collisionCircle.circle.y > 1080) {
+        player->direction= (Vector2){0, -1};
+        launch_force = LAUNCH_FORCE;
+    }
+    if (player->collisionCircle.circle.y < 0) {
+        player->direction = (Vector2){0, 1};
+        launch_force = LAUNCH_FORCE;
+    }
+
     if (physicsUpdateTimer >= physicsUpdateInterval) {
         if (vectorLengthSqr(player->direction) > 0) {
-            player->velocity.x += player->direction.x * player->acceleration;
-            player->velocity.y += player->direction.y * player->acceleration;
+            player->velocity.x += player->direction.x * (launch_force > 0 ? launch_force : player->acceleration);
+            player->velocity.y += player->direction.y * (launch_force > 0 ? launch_force : player->acceleration);
+            launch_force = 0;
         } else {
             if (player->velocity.x > 0) player->velocity.x = maxf(0, player->velocity.x - player->friction);
             else if (player->velocity.x < 0) player->velocity.x = minf(0, player->velocity.x + player->friction);

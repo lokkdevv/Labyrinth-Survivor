@@ -1,6 +1,13 @@
 #include "../include/object.h"
 #include <raylib.h>
 
+#define TOWER1_WIDTH 100
+#define TOWER1_HEIGHT 200
+#define TOWER1_COLOR (Color){100, 200, 50, 255}
+#define TOWER2_WIDTH 120
+#define TOWER2_HEIGHT 209
+#define TOWER2_COLOR (Color){255, 200, 50, 255}
+
 int draw_ui = 0;
 static int hovering = 0;
 
@@ -58,8 +65,13 @@ void drawObject(Object *object) {
             object->circle.circle.radius, debugGreen);
 
     for (int x = 0; x<i; ++x) {
-        DrawRectangle(towers[x].position.x - 25, towers[x].position.y - 100,
-                50, 100, WHITE);
+        if (towers[x].tower_type == 0) {
+            DrawRectangle(towers[x].position.x - TOWER1_WIDTH/2, towers[x].position.y - TOWER1_HEIGHT,
+                    TOWER1_WIDTH, TOWER1_HEIGHT, TOWER1_COLOR);
+        } else {
+            DrawRectangle(towers[x].position.x - TOWER2_WIDTH/2, towers[x].position.y - TOWER2_HEIGHT,
+                    TOWER2_WIDTH, TOWER2_HEIGHT, TOWER2_COLOR);
+        }
     }
 
 

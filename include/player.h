@@ -2,6 +2,7 @@
 
 #include <raylib.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include "vector.h"
 #include "utils.h"
 #include "collision.h"

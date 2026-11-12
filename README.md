@@ -1,10 +1,12 @@
 # labyrinth Survivor
-&emsp;2D top down tower defense game.
+&emsp;2D top down-tower defense game.
 
 ## Description
 &emsp;Game made in C using raylib with CMake as the build tool.
+### Note
+If you play the game, go into the borders of the arena ;)
 ### Idea
-You are in a space labyrinth and have to protect your lost ship and multiple waves of enemies trying to raid and loot it.
+You are in a space labyrinth and have to protect your lost ship and multiple waves of enemies trying to raid it, you have to strategically drive your player in the no friction arena into borders that repel you into positions you might or might not like.
 
 ## Building and Running
 * You need cmake 3.11 or newer installed to build the project, run the following cammand to see what version you have installed if any:

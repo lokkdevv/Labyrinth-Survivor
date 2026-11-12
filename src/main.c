@@ -8,9 +8,9 @@
 #define TARGET_WIDTH 1920
 #define TARGET_HEIGHT 1080
 
-#define ACCELERATION 40.0f
-#define FRICTION 45.0f
-#define MAX_SPEED 250.0f
+#define ACCELERATION 10.0f
+#define FRICTION 7.0f
+#define MAX_SPEED 10000.0f
 
 int main()
 {
@@ -24,7 +24,6 @@ int main()
 
     // Player setup //
     Vector2 startingPos = (Vector2){TARGET_WIDTH/2, TARGET_HEIGHT/2};
-    
     Player *player = initPlayer(startingPos, ACCELERATION, FRICTION, MAX_SPEED, 1.0f/60.0f, 30);
     ///////////////////
     /// Enemy setup ///
@@ -34,8 +33,6 @@ int main()
     Object *object = initObject((Vector2){600, 300}, 20);
     Object *point1 = initObject((Vector2){1920-200, 500}, 20);
     ///////////////////
-
-    CollisionRec wall = {{400, 500, 300, 500}, 0}; // Collision wall //
 
     // BoilerPlate code //
     RenderTexture2D target = LoadRenderTexture(TARGET_WIDTH, TARGET_HEIGHT);
@@ -62,7 +59,6 @@ int main()
 
         canInteract(player->interactionBox, object);
         canInteract(player->interactionBox, point1);
-        BCcollide(wall, &player->collisionCircle);
 
         ////// BoilerPlate //////
         scale = minf((float)GetScreenWidth()/TARGET_WIDTH, (float)GetScreenHeight()/TARGET_HEIGHT);
@@ -79,7 +75,6 @@ int main()
         BeginTextureMode(target);
         ClearBackground(RAYWHITE);
         DrawTexture(background_text, 0, 0, WHITE);
-        DrawRectangleRec(wall.rec, BLACK);
         drawPlayer(player);
         drawEnemy(enemy);
         drawObject(object);

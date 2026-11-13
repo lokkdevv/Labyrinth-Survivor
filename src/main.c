@@ -14,6 +14,10 @@
 
 #define LIGHTPURPLE (Color){112, 41, 99, 20}
 
+#define MAX_ENEMIES 1026
+#define SPAWN_INTERVAL 3.0f
+#define ENEMIES_PER_WAVE 5
+
 int main()
 {
     SetConfigFlags(FLAG_WINDOW_RESIZABLE | FLAG_VSYNC_HINT);
@@ -29,7 +33,16 @@ int main()
     Player *player = initPlayer(startingPos, ACCELERATION, FRICTION, MAX_SPEED, 1.0f/60.0f, 30);
     ///////////////////
     /// Enemy setup ///
-    Enemy *enemy = initEnemy(20, 200, 30, (Vector2){30, 30}, 30);
+    Vector2 targets[7] = {{1520, 350}, {1520, 910}, {960, 910}, {960, 330}, {400, 330}, {400, 690}, {-10, 690}};
+
+    Enemy *enemies[MAX_ENEMIES] = {NULL};
+    int wave = 1;
+    int enemies_to_spawn = wave * ENEMIES_PER_WAVE;
+    int enemies_spawned = 0;
+    int enemies_alive = 0;
+
+    float spawn_timer = SPAWN_INTERVAL;
+
     ///////////////////
     /// Object setup //
     Object *object = initObject((Vector2){600, 300}, 20);
@@ -50,14 +63,57 @@ int main()
     //////////////////////
 
     while (!WindowShouldClose()) {
+        float delta = GetFrameTime();
+        spawn_timer += delta;
+
+        while (spawn_timer >= SPAWN_INTERVAL && enemies_spawned < enemies_to_spawn) {
+            for (int i = 0; i < MAX_ENEMIES; ++i) {
+                if (enemies[i] != NULL)
+                    continue;
+
+                enemies[i] = initEnemy(20, 200, 30, (Vector2){1980, 350}, 30, 100);
+
+                if (enemies[i] != NULL)
+                    enemies_spawned++;
+
+                break;
+            }
+            spawn_timer -= SPAWN_INTERVAL;
+        }
+
         updateAndMovePlayer(player);
         Vector2 player_pos = {player->collisionCircle.circle.x, player->collisionCircle.circle.y};
-        updateAndMoveEnemy(enemy, player_pos);
+
+        enemies_alive = 0;
+        for (int i = 0; i < MAX_ENEMIES; ++i) {
+            if (enemies[i] == NULL)
+                continue;
+
+            updateAndMoveEnemy(enemies[i], targets);
+
+            if (enemies[i]->health <= 0) {
+                deleteEnemy(enemies[i]);
+                enemies[i] = NULL;
+                continue;
+            }
+            enemies_alive++;
+        }
+        if (enemies_spawned >= enemies_to_spawn && enemies_alive == 0) {
+            wave++;
+
+            enemies_to_spawn = wave * ENEMIES_PER_WAVE;
+            enemies_spawned = 0;
+
+            spawn_timer = 0;
+        }
 
         draw_ui = 0;
-        updateObject(object, player);
-        updateObject(point1, player);
-
+        for (int i = 0; i<MAX_ENEMIES; ++i) {
+            if (enemies[i] == NULL)
+                continue;
+            updateObject(object, player, enemies[i]);
+            updateObject(point1, player, enemies[i]);
+        }
 
         canInteract(player->interactionBox, object);
         canInteract(player->interactionBox, point1);
@@ -75,22 +131,38 @@ int main()
         updateUI();
         
         BeginTextureMode(target);
+        DrawText(TextFormat("WAVE %d", wave), 30, 30, 32, WHITE);
+        DrawText(TextFormat("ENEMIES: %d / %d", enemies_spawned, enemies_to_spawn), 30, 70, 20, WHITE);
         ClearBackground(BLACK);
         DrawTexture(background_text, 0, 0, WHITE);
         // Path Drawing //
-        DrawRectangleRounded((Rectangle){1920-460, 1080/2-250, 700, 120}, 1, 2, LIGHTPURPLE);
-        DrawRectangleRounded((Rectangle){1920-460, 1080/2-250, 120, 680}, 1, 2, LIGHTPURPLE);
-        DrawRectangleRounded((Rectangle){1920-680-460+120, 1080/2+310, 680, 120}, 1, 2, LIGHTPURPLE);
-        DrawRectangleRounded((Rectangle){1920-680-460+120, 1080/2+310-700+120, 120, 700}, 1, 2, LIGHTPURPLE);
-        DrawRectangleRounded((Rectangle){340, 1080/2+310-700+120, 680, 120}, 1, 2, LIGHTPURPLE);
-        DrawRectangleRounded((Rectangle){340, 1080/2+310-700+120, 120, 480}, 1, 2, LIGHTPURPLE);
-        DrawRectangleRounded((Rectangle){-50, 680-50, 510, 120}, 1, 2, LIGHTPURPLE);
+        DrawRectangleRounded((Rectangle){1460, 290, 700, 120}, 1, 2, LIGHTPURPLE);
+        DrawRectangleRounded((Rectangle){1460, 290, 120, 680}, 1, 2, LIGHTPURPLE);
+        DrawRectangleRounded((Rectangle){900, 850, 680, 120}, 1, 2, LIGHTPURPLE);
+        DrawRectangleRounded((Rectangle){900, 270, 120, 700}, 1, 2, LIGHTPURPLE);
+        DrawRectangleRounded((Rectangle){340, 270, 680, 120}, 1, 2, LIGHTPURPLE);
+        DrawRectangleRounded((Rectangle){340, 270, 120, 480}, 1, 2, LIGHTPURPLE);
+        DrawRectangleRounded((Rectangle){-50, 630, 510, 120}, 1, 2, LIGHTPURPLE);
         //////////////////
+        // Target Debug Drawing //
+        DrawCircle(1520, 350, 5, debugYellow);
+        DrawCircle(1520, 910, 5, debugYellow);
+        DrawCircle(960, 910, 5, debugYellow);
+        DrawCircle(960, 330, 5, debugYellow);
+        DrawCircle(400, 330, 5, debugYellow);
+        DrawCircle(400, 690, 5, debugYellow);
+        DrawCircle(-10, 690, 5, debugYellow);
+        //////////////////////////
 
         drawPlayer(player);
-        drawEnemy(enemy);
         drawObject(object);
         drawObject(point1);
+
+        for (int i = 0; i<MAX_ENEMIES; ++i) {
+            if (enemies[i] == NULL)
+                continue;
+            drawEnemy(enemies[i]);
+        }
 
         EndTextureMode();
 
@@ -104,11 +176,15 @@ int main()
         ///////////////////
     }
     UnloadRenderTexture(target);
+    UnloadTexture(background_text);
     UnloadShader(shader);
-    deleteEnemy(enemy);
     deletePlayer(player);
     deleteObject(object);
     deleteObject(point1);
+    for (int i = 0; i<MAX_ENEMIES; ++i) {
+        if (enemies[i] != NULL)
+            deleteEnemy(enemies[i]);
+    }
     CloseWindow();
     return 0;
 }

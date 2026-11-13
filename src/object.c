@@ -1,4 +1,5 @@
 #include "../include/object.h"
+#include <raylib.h>
 
 #define TOWER1_WIDTH 100
 #define TOWER1_HEIGHT 200
@@ -7,6 +8,8 @@
 #define TOWER2_HEIGHT 209
 #define TOWER2_COLOR (Color){100, 100, 255, 255}
 
+#define RANGE 200
+
 int draw_ui = 0;
 static int hovering = 0;
 
@@ -14,6 +17,8 @@ static int price[2] = {50, 130};
 
 static Tower towers[6];
 static int i = 0;
+
+static int draw_projectile = 0;
 
 void deleteObject(Object *object) {
     free(object);
@@ -31,9 +36,14 @@ Object* initObject(Vector2 position, float radius) {
 
 void updateObject(Object *object, Player *player, Enemy *enemy) {
     Vector2 enemy_pos = {enemy->circle.circle.x, enemy->circle.circle.y};
-    Vector2 object_pos = 
-    float distance_to_enemy = enemy_pos - object_pos;
-    if (enemy_pos) {
+    Vector2 object_pos = {object->circle.circle.x, object->circle.circle.y};
+    Vector2 direction_vector;
+    direction_vector.x = enemy_pos.x - object_pos.x;
+    direction_vector.y = enemy_pos.y - object_pos.y;
+    float distance_to_enemy = vectorLengthSqr(direction_vector);
+    if (distance_to_enemy <= RANGE*RANGE && enemy->health > 0 && object->type != 2) {
+        attack(object->type, enemy);
+        draw_projectile = 1;
     }
 
     if (object->interacted) {
@@ -46,6 +56,20 @@ void updateObject(Object *object, Player *player, Enemy *enemy) {
         }
     }
 }
+
+void attack(int tower_type, Enemy *enemy) {
+    switch (tower_type) {
+        case 0:
+            enemy->health -= 50;
+            break;
+        case 1:
+            enemy->health -= 100;
+            break;
+        default:
+            break;
+    }
+}
+
 
 void updateUI() {
     if (draw_ui && IsKeyPressed(KEY_TAB))
@@ -60,10 +84,22 @@ int build(Object *object, int select) {
     }
     towers[i] = (Tower){select, pos};
     i++;
+    object->type = select;
     return 1;
 }
 
 void drawObject(Object *object) {
+    DrawCircle(object->circle.circle.x, object->circle.circle.y, RANGE, debugRed);
+    if (draw_projectile) {
+        switch (object->type) {
+            case 0:
+                break;
+            case 1:
+                break;
+            default:
+                break;
+        }
+    }
     DrawCircle(object->circle.circle.x, object->circle.circle.y, 
             object->circle.circle.radius, debugGreen);
 

@@ -17,6 +17,7 @@ extern int draw_ui;
 Object* initObject(Vector2 starting_position, float collision_radius);
 void updateUI();
 int build(Object *object, int selected);
+void attack(int tower_type, Enemy *enemy);
 void deleteObject(Object *object);
 void updateObject(Object *object, Player *player, Enemy *enemy);
 void drawObject(Object *object); // 1 to draw ui 0 to not draw ui

@@ -3,6 +3,7 @@
 Color debugGreen = {50, 205, 50, 100};
 Color debugYellow = {255, 255, 0, 100};
 Color debugRed = {255, 0, 0, 100};
+Color LIGHTPURPLE = {112, 41, 99, 20};
 
 float minf(float num1, float num2) {
     if (num1==NAN)

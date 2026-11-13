@@ -6,6 +6,7 @@
 extern Color debugGreen;
 extern Color debugYellow;
 extern Color debugRed;
+extern Color LIGHTPURPLE;
 
 float minf(float num1, float num2);
 float maxf(float num1, float num2);

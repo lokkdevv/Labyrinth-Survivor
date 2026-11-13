@@ -1,5 +1,5 @@
 # labyrinth Survivor
-&emsp;2D top down-tower defense game.
+&emsp;Chill 2D top down-tower defense game.
 
 ## Description
 &emsp;Game made in C using raylib with CMake as the build tool.

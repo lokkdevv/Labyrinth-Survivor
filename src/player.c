@@ -22,7 +22,7 @@ Player* initPlayer(Vector2 startPos, float acc, float fric, float max_s, float p
     player->friction = fric;
     player->max_speed = max_s;
 
-    player->money = 200;
+    player->money = 100;
 
     physicsUpdateInterval = phInterval;
     physicsUpdateTimer = 0;
@@ -98,9 +98,9 @@ void drawPlayer(const Player *player) {
             player->interactionBox.rec.y,
             player->interactionBox.rec.width, player->interactionBox.rec.height, debugYellow);
 
-    DrawText("Money:", 1920/2-150, 5, 30, YELLOW);
-    char money[40];
-    snprintf(money, sizeof(money), "%d", player->money);
-    DrawText(money, 1920/2+10, 5, 30, YELLOW);
+    //DrawText("Money:", 1920/2-150, 5, 30, YELLOW);
+    //char money[40];
+    //snprintf(money, sizeof(money), "%d", player->money);
+    //DrawText(money, 1920/2+10, 5, 30, YELLOW);
 }
 

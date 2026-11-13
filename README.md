@@ -34,6 +34,9 @@ cmake --build build
 - Raylib
 - X11 and Wayland (idk which one you need so you need both ig)
 
+### ScreenShots
+![Gameplay screenshot](resources/sprites/gameplay.png)
+
 ## License
 
 Copyright (c) 2026 lokk. All rights reserved.

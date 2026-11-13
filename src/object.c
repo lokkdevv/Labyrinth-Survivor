@@ -1,12 +1,11 @@
 #include "../include/object.h"
-#include <raylib.h>
 
 #define TOWER1_WIDTH 100
 #define TOWER1_HEIGHT 200
-#define TOWER1_COLOR (Color){100, 200, 50, 255}
+#define TOWER1_COLOR (Color){200, 66, 100, 255}
 #define TOWER2_WIDTH 120
 #define TOWER2_HEIGHT 209
-#define TOWER2_COLOR (Color){255, 200, 50, 255}
+#define TOWER2_COLOR (Color){100, 100, 255, 255}
 
 int draw_ui = 0;
 static int hovering = 0;
@@ -17,8 +16,6 @@ static Tower towers[6];
 static int i = 0;
 
 void deleteObject(Object *object) {
-    if (object->texture.id != 0)
-        UnloadTexture(object->texture);
     free(object);
 }
 
@@ -32,7 +29,13 @@ Object* initObject(Vector2 position, float radius) {
     return object;
 }
 
-void updateObject(Object *object, Player *player) {
+void updateObject(Object *object, Player *player, Enemy *enemy) {
+    Vector2 enemy_pos = {enemy->circle.circle.x, enemy->circle.circle.y};
+    Vector2 object_pos = 
+    float distance_to_enemy = enemy_pos - object_pos;
+    if (enemy_pos) {
+    }
+
     if (object->interacted) {
         draw_ui = 1;
 

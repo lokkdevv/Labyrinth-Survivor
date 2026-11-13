@@ -98,9 +98,9 @@ void drawPlayer(const Player *player) {
             player->interactionBox.rec.y,
             player->interactionBox.rec.width, player->interactionBox.rec.height, debugYellow);
 
-    DrawText("Money:", 1920/2-85, 5, 30, YELLOW);
+    DrawText("Money:", 1920/2-150, 5, 30, YELLOW);
     char money[40];
     snprintf(money, sizeof(money), "%d", player->money);
-    DrawText(money, 1920/2-50, 30, 30, YELLOW);
+    DrawText(money, 1920/2+10, 5, 30, YELLOW);
 }
 

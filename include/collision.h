@@ -22,8 +22,8 @@ typedef struct {
 
 typedef struct {
     int interacted;
+    int type;
     CollisionCircle circle;
-    Texture2D texture;
 } Object;
 
 void canInteract(CollisionRec interaction_box, Object *object);

@@ -4,6 +4,10 @@ inline float vectorLengthSqr(Vector2 vector) {
     return vector.x*vector.x+vector.y*vector.y;
 }
 
+inline float vectorLength(Vector2 vector) {
+    return sqrt(vector.x*vector.x+vector.y*vector.y);
+}
+
 inline Vector2 vectorScale(Vector2 vector, float scale) {
     return (Vector2){vector.x * scale, vector.y * scale};
 }

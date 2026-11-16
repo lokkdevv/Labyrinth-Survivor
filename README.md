@@ -41,4 +41,4 @@ cmake --build build
 
 Copyright (c) 2026 lokk. All rights reserved.
 
-This project is licensed under the Elastic License 2.0 - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License 2.0 - see the [LICENSE](LICENSE) file for details.
